@@ -1,7 +1,19 @@
+{
+    # Enable the global log
+    log {
+        output stdout
+        format json
+    }
+}
+
 api.htruong83.com {
     tls internal
 
     handle /api/v1/fast* {
+        log {
+            output stdout
+            format json
+        }
         rewrite * /api/v1{uri}
         reverse_proxy fast-api-demo.railway.internal:8080 {
             header_up Host {host}
@@ -12,6 +24,10 @@ api.htruong83.com {
     }
 
     handle {
+        log {
+            output stdout
+            format json
+        }
         reverse_proxy fast-api-demo.railway.internal:8080 {
             header_up Host {host}
             header_up X-Real-IP {remote}

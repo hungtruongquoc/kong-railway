@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "build": {
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "Dockerfile.migration",
+    "watchPatterns": ["Dockerfile.migration", "wait-for-it.sh"],
+    "buildCommand": null,
+    "buildEnvironment": "V2",
+    "nixpacksConfigPath": null,
+    "nixpacksPlan": null,
+    "nixpacksVersion": null
+  }
+}

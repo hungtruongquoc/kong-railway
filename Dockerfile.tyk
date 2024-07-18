@@ -1,0 +1,11 @@
+FROM tykio/tyk-gateway:latest
+
+ARG TYK_GW_SECRET
+ARG TYK_REDIS_HOST
+
+ENV TYK_GW_SECRET=$TYK_GW_SECRET
+ENV TYK_REDIS_HOST=$TYK_REDIS_HOST
+
+EXPOSE 8080 8081
+
+CMD ["tyk", "start", "--conf=/opt/tyk-gateway/tyk.conf"]

@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  kong:
+    image: kong:3.7.1
+    container_name: kong
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: ${POSTGRES_HOST}
+      KONG_PG_USER: ${POSTGRES_USER}
+      KONG_PG_PASSWORD: ${POSTGRES_PASSWORD}
+      KONG_PG_DATABASE: ${POSTGRES_DB}
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 127.0.0.1:8001  # Bind Admin API to localhost for security
+    ports:
+      - "8000:8000"   # Expose port 8000 for HTTP proxy
+      - "8443:8443"   # Expose port 8443 for HTTPS proxy
+      # Do not expose the admin port to the public
+      #- "8001:8001"
+      #- "8444:8444"
+    depends_on:
+      - kong-migration
+
+  kong-migration:
+    image: kong:latest
+    container_name: kong-migration
+    environment:
+      KONG_DATABASE: postgres
+      KONG_PG_HOST: ${POSTGRES_HOST}
+      KONG_PG_USER: ${POSTGRES_USER}
+      KONG_PG_PASSWORD: ${POSTGRES_PASSWORD}
+      KONG_PG_DATABASE: ${POSTGRES_DB}
+    depends_on:
+      - wait-for-postgres
+    command: ["kong", "migrations", "bootstrap"]
+
+  wait-for-postgres:
+    image: alpine
+    container_name: wait-for-postgres
+    command: >
+      /bin/sh -c "
+      apk add --no-cache postgresql-client && 
+      until pg_isready -h <your_railway_postgres_host> -U <your_railway_postgres_user>; do 
+        sleep 2; 
+      done;
+      "
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+
+volumes:
+  kong-data:

@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "build": {
+    "builder": "DOCKERFILE",
+    "dockerfilePath": "Dockerfile.nginx",
+    "buildCommand": null,
+    "buildEnvironment": "V2",
+    "nixpacksConfigPath": null,
+    "nixpacksPlan": null,
+    "nixpacksVersion": null
+  }
+}

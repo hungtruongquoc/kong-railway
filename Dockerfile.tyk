@@ -13,6 +13,9 @@ ENV TYK_REDIS_PASSWORD=$TYK_REDIS_PASSWORD
 # Copy the configuration file into the container
 COPY tyk.conf /opt/tyk-gateway/tyk.conf
 
+# Copy the template files into the container
+COPY tyk/templates /opt/tyk-gateway/templates
+
 EXPOSE 8080 8081
 
 CMD ["tyk", "start", "--conf=/opt/tyk-gateway/tyk.conf"]

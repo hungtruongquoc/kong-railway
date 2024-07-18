@@ -10,6 +10,9 @@ ENV TYK_REDIS_HOST=$TYK_REDIS_HOST
 ENV TYK_REDIS_USER=$TYK_REDIS_USER
 ENV TYK_REDIS_PASSWORD=$TYK_REDIS_PASSWORD
 
+# Copy the configuration file into the container
+COPY tyk.conf /opt/tyk-gateway/tyk.conf
+
 EXPOSE 8080 8081
 
 CMD ["tyk", "start", "--conf=/opt/tyk-gateway/tyk.conf"]

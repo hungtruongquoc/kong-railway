@@ -9,12 +9,7 @@
 
 api.htruong83.com {
     tls internal
-
-    # Log all requests at the site level
-    log
-
     handle /api/v1/fast* {
-        log
         rewrite * /api/v1{uri}
         reverse_proxy fast-api-demo.railway.internal:8080 {
             header_up Host {host}
@@ -25,7 +20,6 @@ api.htruong83.com {
     }
 
     handle {
-        log
         reverse_proxy fast-api-demo.railway.internal:8080 {
             header_up Host {host}
             header_up X-Real-IP {remote}

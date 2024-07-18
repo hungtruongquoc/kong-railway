@@ -3,6 +3,7 @@
   "build": {
     "builder": "DOCKERFILE",
     "dockerfilePath": "Dockerfile.nginx",
+    "watchPatterns": ["Dockerfile.nginx", "nginx/nginx.conf"],
     "buildCommand": null,
     "buildEnvironment": "V2",
     "nixpacksConfigPath": null,

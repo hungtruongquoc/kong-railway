@@ -1,7 +1,8 @@
 api.htruong83.com {
     tls internal
-    handle_path /api/v1/fast* {
-        rewrite * /api/v1{path}
+
+    handle /api/v1/fast* {
+        rewrite * /api/v1{uri}
         reverse_proxy fast-api-demo.railway.internal:8080 {
             header_up Host {host}
             header_up X-Real-IP {remote}
@@ -10,7 +11,7 @@ api.htruong83.com {
         }
     }
 
-    handle_path /* {
+    handle {
         reverse_proxy fast-api-demo.railway.internal:8080 {
             header_up Host {host}
             header_up X-Real-IP {remote}

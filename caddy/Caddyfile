@@ -4,6 +4,7 @@
         format json
         level DEBUG
     }
+    auto_https off
 }
 
 api.htruong83.com {

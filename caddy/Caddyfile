@@ -1,5 +1,6 @@
 {
-    admin off  # Disable admin interface for security
+    auto_https off
+    admin off
     log {
         output stdout
         format json
@@ -7,19 +8,34 @@
     }
 }
 
-:80 {  # Listen on all interfaces, port 80
+:80 {
     log {
         output stdout
         format json
         level DEBUG
     }
 
+    # Log the incoming Host header for debugging
+    header_down X-Received-Host {http.request.host}
+
     handle /api/v1/fast* {
         rewrite * /api/v1{uri}
-        reverse_proxy fast-api-demo.railway.internal:8080
+        reverse_proxy fast-api-demo.railway.internal:8080 {
+            header_up Host {http.request.host}
+            header_up X-Forwarded-Host {http.request.host}
+            header_up X-Real-IP {remote_ip}
+            header_up X-Forwarded-For {http.request.header.X-Forwarded-For}
+            header_up X-Forwarded-Proto https
+        }
     }
 
     handle {
-        reverse_proxy fast-api-demo.railway.internal:8080
+        reverse_proxy fast-api-demo.railway.internal:8080 {
+            header_up Host {http.request.host}
+            header_up X-Forwarded-Host {http.request.host}
+            header_up X-Real-IP {remote_ip}
+            header_up X-Forwarded-For {http.request.header.X-Forwarded-For}
+            header_up X-Forwarded-Proto https
+        }
     }
 }

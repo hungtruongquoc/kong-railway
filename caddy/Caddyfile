@@ -20,19 +20,9 @@
         }
     }
 
-    handle /api/v1/proxy* {
-            rewrite * /api/v1{uri}
-            reverse_proxy express-passthrough-django-demo:8080 {
-                header_up Host {http.request.host}
-                header_up X-Forwarded-Host {http.request.host}
-                header_up X-Real-IP {remote_ip}
-                header_up X-Forwarded-For {http.request.header.X-Forwarded-For}
-                header_up X-Forwarded-Proto https
-            }
-        }
-
-    handle {
-        reverse_proxy fast-api-demo.railway.internal:8080 {
+    handle /api/v1/proxy/* {
+        rewrite * /api/v1/{path}
+        reverse_proxy http://django-backend-prod.eba-3ye3d5ef.us-west-1.elasticbeanstalk.com {
             header_up Host {http.request.host}
             header_up X-Forwarded-Host {http.request.host}
             header_up X-Real-IP {remote_ip}

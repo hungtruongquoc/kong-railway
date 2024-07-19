@@ -1,13 +1,19 @@
 {
+    admin off  # Disable admin interface for security
     log {
         output stdout
         format json
         level DEBUG
     }
-    auto_https off
 }
 
-api.htruong83.com {
+:80 {  # Listen on all interfaces, port 80
+    log {
+        output stdout
+        format json
+        level DEBUG
+    }
+
     handle /api/v1/fast* {
         rewrite * /api/v1{uri}
         reverse_proxy fast-api-demo.railway.internal:8080

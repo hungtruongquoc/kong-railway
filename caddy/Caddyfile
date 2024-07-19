@@ -10,7 +10,7 @@
 
 :80 {
     handle /api/v1/fast* {
-        rewrite * /{path}
+        rewrite * /api/v1{uri}
         reverse_proxy fast-api-demo.railway.internal:8080 {
             header_up Host {http.request.host}
             header_up X-Forwarded-Host {http.request.host}

@@ -10,13 +10,15 @@
 
 :80 {
     handle /api/v1/fast* {
-        rewrite * /api/v1{uri}
-        reverse_proxy fast-api-demo.railway.internal:8080 {
-            header_up Host {http.request.host}
-            header_up X-Forwarded-Host {http.request.host}
-            header_up X-Real-IP {remote_ip}
-            header_up X-Forwarded-For {http.request.header.X-Forwarded-For}
-            header_up X-Forwarded-Proto https
+        handle /api/v1/fast* {
+            rewrite * /api/v1{path} {query}
+            reverse_proxy fast-api-demo.railway.internal:8080 {
+                header_up Host {http.request.host}
+                header_up X-Forwarded-Host {http.request.host}
+                header_up X-Real-IP {remote_ip}
+                header_up X-Forwarded-For {http.request.header.X-Forwarded-For}
+                header_up X-Forwarded-Proto https
+            }
         }
     }
 

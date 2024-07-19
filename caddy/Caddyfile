@@ -20,7 +20,7 @@
         }
     }
 
-    handle /api/v1/proxy/* {
+    handle_path /api/v1/proxy/* {
         rewrite * /api/v1/{path}
         reverse_proxy http://django-backend-prod.eba-3ye3d5ef.us-west-1.elasticbeanstalk.com {
             header_up Host {http.request.host}

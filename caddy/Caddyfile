@@ -9,15 +9,6 @@
 }
 
 :80 {
-    log {
-        output stdout
-        format json
-        level DEBUG
-    }
-
-    # Log the incoming Host header for debugging
-    header_down X-Received-Host {http.request.host}
-
     handle /api/v1/fast* {
         rewrite * /api/v1{uri}
         reverse_proxy fast-api-demo.railway.internal:8080 {

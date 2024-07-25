@@ -11,7 +11,8 @@
 :80 {
     handle_path /api/v1/fast* {
         rewrite * /api/v1{path}
-        reverse_proxy fast-api-demo.railway.internal:8080 {
+        reverse_proxy fast-api-demo.railway.internal:8080 fast-api-demo-2.railway.internal:8080 {
+            lb_policy round_robin
             header_up Host {http.request.host}
             header_up X-Forwarded-Host {http.request.host}
             header_up X-Real-IP {remote_ip}

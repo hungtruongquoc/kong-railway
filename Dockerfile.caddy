@@ -8,10 +8,10 @@ EXPOSE 80
 EXPOSE 443
 
 # Step: Install the Datadog Agent
-RUN apk add --no-cache curl \
-    && curl -LO https://s3.amazonaws.com/dd-agent/datadog-agent-6-latest.amd64.apk \
-    && apk add --allow-untrusted datadog-agent-6-latest.amd64.apk \
-    && rm datadog-agent-6-latest.amd64.apk
+RUN apk add --no-cache curl gnupg \
+    && curl -o /tmp/datadog-agent.apk -L https://s3.amazonaws.com/dd-agent/datadog-agent-7-latest.amd64.apk \
+    && apk add --allow-untrusted /tmp/datadog-agent.apk \
+    && rm /tmp/datadog-agent.apk
 
 # Copy the script to start both Caddy and Datadog Agent
 COPY start_caddy.sh /start_caddy.sh

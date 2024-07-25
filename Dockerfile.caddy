@@ -3,7 +3,23 @@ FROM caddy:latest
 # Copy the Caddyfile to the default location
 COPY caddy/Caddyfile /etc/caddy/Caddyfile
 
+# Expose ports for Caddy
 EXPOSE 80
 EXPOSE 443
 
-CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+# Step 8: Install the Datadog Agent
+RUN apt-get update && apt-get install -y curl gnupg apt-transport-https \
+    && curl -o /tmp/datadog-signing-key.asc https://keys.datadoghq.com/DATADOG_APT_KEY_CURRENT.public \
+    && apt-key add /tmp/datadog-signing-key.asc \
+    && sh -c "echo 'deb https://apt.datadoghq.com/ stable 7' > /etc/apt/sources.list.d/datadog.list" \
+    && apt-get update \
+    && apt-get install -y datadog-agent \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Copy the script to start both Caddy and Datadog Agent
+COPY start_caddy.sh /start_caddy.sh
+RUN chmod +x /start_caddy.sh
+
+# Set the default command to run the script
+CMD ["/start.sh"]

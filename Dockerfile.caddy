@@ -7,15 +7,11 @@ COPY caddy/Caddyfile /etc/caddy/Caddyfile
 EXPOSE 80
 EXPOSE 443
 
-# Step 8: Install the Datadog Agent
-# Step 8: Install the Datadog Agent
-RUN apk update && apk add --no-cache \
-    curl \
-    gnupg \
-    && curl -o /tmp/datadog-signing-key.asc https://keys.datadoghq.com/DATADOG_APT_KEY_CURRENT.public \
-    && gpg --import /tmp/datadog-signing-key.asc \
-    && echo "@community http://dl-cdn.alpinelinux.org/alpine/v3.10/community" >> /etc/apk/repositories \
-    && apk add --no-cache datadog-agent@community
+# Step: Install the Datadog Agent
+RUN apk add --no-cache curl \
+    && curl -LO https://s3.amazonaws.com/dd-agent/datadog-agent-6-latest.amd64.apk \
+    && apk add --allow-untrusted datadog-agent-6-latest.amd64.apk \
+    && rm datadog-agent-6-latest.amd64.apk
 
 # Copy the script to start both Caddy and Datadog Agent
 COPY start_caddy.sh /start_caddy.sh

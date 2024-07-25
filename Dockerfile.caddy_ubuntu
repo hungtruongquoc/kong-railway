@@ -1,0 +1,31 @@
+FROM ubuntu:latest
+
+# Install necessary packages including Caddy and Datadog Agent
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg \
+    lsb-release \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | apt-key add - \
+    && curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/deb.ubuntu.$(lsb_release -cs).list' | tee /etc/apt/sources.list.d/caddy-stable.list \
+    && apt-get update && apt-get install -y caddy \
+    && curl -o /tmp/datadog-signing-key.asc https://keys.datadoghq.com/DATADOG_APT_KEY_CURRENT.public \
+    && apt-key add /tmp/datadog-signing-key.asc \
+    && sh -c "echo 'deb https://apt.datadoghq.com/ stable 7' > /etc/apt/sources.list.d/datadog.list" \
+    && apt-get update \
+    && apt-get install -y datadog-agent \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Copy the Caddyfile to the default location
+COPY caddy/Caddyfile /etc/caddy/Caddyfile
+
+# Copy the script to start both Caddy and Datadog Agent
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Expose ports for Caddy
+EXPOSE 80
+EXPOSE 443
+
+# Set the default command to run the script
+CMD ["/start.sh"]
